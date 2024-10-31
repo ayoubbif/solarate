@@ -12,14 +12,14 @@ export const useUtilityRates = () => {
   });
 
   const fetchUtilityRates = async (formData) => {
-    setUtilityData(prev => ({ ...prev, loading: true, error: null }));
+    setUtilityData((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       const response = await fetch('/api/utility-rates/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
+          'X-CSRFToken': getCookie('csrftoken')
         },
         body: JSON.stringify(formData),
         credentials: 'same-origin'
@@ -42,7 +42,7 @@ export const useUtilityRates = () => {
 
       return { success: true };
     } catch (error) {
-      setUtilityData(prev => ({
+      setUtilityData((prev) => ({
         ...prev,
         loading: false,
         error: error.message

@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Card,
-  CardContent,
-  Typography,
-  Alert
-} from '@mui/material';
-import {UtilityForm} from './UtilityForm';
-import {SelectedRatePlan} from './SelectedRatePlan';
-import {CostProjection} from './CostProjection';
-import {FeedbackSnackbar} from './FeedbackSnackbar';
+import { Container, Card, CardContent, Typography, Alert } from '@mui/material';
+import { UtilityForm } from './UtilityForm';
+import { SelectedRatePlan } from './SelectedRatePlan';
+import { CostProjection } from './CostProjection';
+import { FeedbackSnackbar } from './FeedbackSnackbar';
 import { useUtilityRates } from '../hooks/useUtilityRates';
 
 const UtilityRateFinder = () => {
@@ -19,9 +13,9 @@ const UtilityRateFinder = () => {
     escalator: 4,
     selectedRate: ''
   });
-  
+
   const { utilityData, fetchUtilityRates } = useUtilityRates();
-  
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -30,7 +24,7 @@ const UtilityRateFinder = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -39,16 +33,18 @@ const UtilityRateFinder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await fetchUtilityRates(formData);
-    
+
     setSnackbar({
       open: true,
-      message: result.success ? 'Utility rates retrieved successfully!' : result.error,
+      message: result.success
+        ? 'Utility rates retrieved successfully!'
+        : result.error,
       severity: result.success ? 'success' : 'error'
     });
   };
 
   const handleSnackbarClose = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
