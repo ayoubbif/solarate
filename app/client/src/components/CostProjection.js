@@ -3,22 +3,39 @@ import { Box, Typography, Tabs, Tab } from '@mui/material';
 import {CostProjectionChart} from './CostProjectionChart';
 import {CostProjectionTable} from './CostProjectionTable';
 
-export const CostProjection = ({ yearlyCosts }) => {
+const isLeapYear = (year) => {
+  const currentYear = new Date().getFullYear();
+  const targetYear = currentYear + year;
+  return (targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0;
+};
+
+const getDaysInYear = (yearIndex) => {
+  return isLeapYear(yearIndex) ? 366 : 365;
+};
+
+export const CostProjection = ({ dailyCost }) => {
     const [viewMode, setViewMode] = useState('graph');
   
-    if (yearlyCosts.length === 0) return null;
+    const calculateYearlyCosts = () => {
+      return Array.from({ length: 20 }, (_, yearIndex) => {
+        const daysInYear = getDaysInYear(yearIndex);
+        const yearlyAmount = dailyCost * daysInYear;
+        
+        const previousYearsCost = Array.from({ length: yearIndex }, (_, prevIndex) => 
+          dailyCost * getDaysInYear(prevIndex)
+        ).reduce((sum, cost) => sum + cost, 0);
   
-    const chartData = yearlyCosts.map((cost, index) => {
-      const cumulativeCost = yearlyCosts
-        .slice(0, index + 1)
-        .reduce((sum, c) => sum + c, 0);
-      return {
-        year: `Year ${index + 1}`,
-        annualCost: cost,
-        cumulativeCost: cumulativeCost
-      };
-    });
+        return {
+          year: `Year ${yearIndex + 1}`,
+          daysInYear,
+          annualCost: yearlyAmount,
+          cumulativeCost: yearlyAmount + previousYearsCost
+        };
+      });
+    };
   
+    const chartData = calculateYearlyCosts();
+    
     return (
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
