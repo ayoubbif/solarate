@@ -29,14 +29,10 @@ class ProposalUtility(models.Model):
     project = models.OneToOneField(
         Project,
         on_delete=models.CASCADE,
-        related_name='proposal_utility'
+        related_name='proposal'
     )
     openei_id = models.CharField(max_length=100)
     rate_name = models.CharField(max_length=255)
-    approved = models.BooleanField(default=False)
-    is_default = models.BooleanField(default=False)
-    start_date = models.DateField()
-    pricing_matrix = models.JSONField()
     average_rate = models.FloatField()  # cents/kWh
     first_year_cost = models.FloatField()  # $
 
