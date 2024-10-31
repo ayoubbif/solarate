@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import UtilityRateFinder from './UtilityRateFinder';
 
 export default class App extends Component {
     constructor(props) {
@@ -7,9 +8,9 @@ export default class App extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Hello!</h1>
-            </div>
+            <>
+                <UtilityRateFinder/>
+            </>
         );
     }
 }
