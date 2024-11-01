@@ -1,7 +1,8 @@
 import React from 'react';
+import { Box, Paper } from '@mui/material';
+import { Line } from 'recharts';
 import {
   LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -9,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { Box, Paper } from '@mui/material';
 import { formatCurrency } from '../utils/formatters';
 
 export const CostProjectionChart = ({ chartData }) => (
