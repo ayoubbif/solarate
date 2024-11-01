@@ -88,7 +88,7 @@ class UtilityRateView(APIView):
                 daily_consumption
             )
 
-            # Add enhanced rate information to each rate option
+            # Add rate information to each rate option
             rates_with_analysis = self._add_rate_analysis(
                 rates,
                 daily_consumption
@@ -137,29 +137,29 @@ class UtilityRateView(APIView):
             analyzed_rates = []
             for rate in rates:
                 rate_copy = rate.copy()
-                
+
                 # Calculate effective rate for this plan
                 effective_rate = self.rate_calculator.calculate_average_rate(
                     rate['energyratestructure'],
                     rate['energyweekdayschedule'],
                     daily_consumption
                 )
-                
+
                 # Calculate daily cost for this plan
                 daily_cost = self.rate_calculator.calculate_daily_cost(
                     rate['energyratestructure'],
                     rate['energyweekdayschedule'],
                     daily_consumption
                 )
-                
+
                 rate_copy.update({
                     'effective_rate': effective_rate,
                     'daily_cost': daily_cost
                 })
                 analyzed_rates.append(rate_copy)
-                
+
             return analyzed_rates
-            
+
         except Exception as e:
             logger.error(
                 f"Error adding rate analysis: {str(e)}",
