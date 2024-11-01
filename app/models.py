@@ -19,6 +19,7 @@ class Project(models.Model):
             MaxValueValidator(10.0)
         ]
     )
+    selected_rate = models.CharField(max_length=255, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

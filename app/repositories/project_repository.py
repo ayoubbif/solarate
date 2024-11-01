@@ -10,7 +10,8 @@ class ProjectRepository:
             user=user,
             address=address,
             consumption=consumption,
-            percentage=escalator
+            percentage=escalator,
+            selected_rate=rate_info['name']
         )
 
         ProposalUtility.objects.create(
