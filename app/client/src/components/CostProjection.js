@@ -12,7 +12,9 @@ export const CostProjection = ({ yearlyCosts }) => {
   const isLeapYear = (year) => {
     const currentYear = new Date().getFullYear();
     const targetYear = currentYear + year;
-    return (targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0;
+    return (
+      (targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0
+    );
   };
 
   const chartData = yearlyCosts.map((cost, index) => {
