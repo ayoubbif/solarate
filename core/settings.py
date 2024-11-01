@@ -33,6 +33,11 @@ ALLOWED_HOSTS = []
 # OpenEI API settings
 OPENEI_API_KEY= os.getenv('OPENEI_API_KEY')
 
+# Webhook settings
+WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+
+if not WEBHOOK_URL:
+    raise ValueError("WEBHOOK_URL environment variable is not set")
 
 # Application definition
 
