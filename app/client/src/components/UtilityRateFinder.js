@@ -14,7 +14,7 @@ const UtilityRateFinder = () => {
     selectedRate: ''
   });
 
-  const { utilityData, fetchUtilityRates } = useUtilityRates();
+  const { utilityData, fetchUtilityRates, updateSelectedRate } = useUtilityRates();
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -30,9 +30,26 @@ const UtilityRateFinder = () => {
     }));
   };
 
+  const handleRateSelect = (rateLabel) => {
+    // Update both form data and utility data state
+    setFormData((prev) => ({
+      ...prev,
+      selectedRate: rateLabel
+    }));
+    updateSelectedRate(rateLabel);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await fetchUtilityRates(formData);
+
+    if (result.success && utilityData.rates.length > 0) {
+      // Always ensure the selected rate reflects the user's choice
+      if (!formData.selectedRate) {
+        const initialRate = utilityData.mostLikelyRate?.label || utilityData.rates[0].label;
+        handleRateSelect(initialRate);
+      }
+    }
 
     setSnackbar({
       open: true,
@@ -42,6 +59,8 @@ const UtilityRateFinder = () => {
       severity: result.success ? 'success' : 'error'
     });
   };
+
+
 
   const handleSnackbarClose = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
@@ -54,30 +73,30 @@ const UtilityRateFinder = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             Utility Rate Calculator
           </Typography>
-
           <UtilityForm
             formData={formData}
             onInputChange={handleInputChange}
             onSubmit={handleSubmit}
             loading={utilityData.loading}
             rates={utilityData.rates}
+            onRateSelect={handleRateSelect}
           />
-
           {utilityData.error && (
             <Alert severity="error" sx={{ mb: 3 }}>
               {utilityData.error}
             </Alert>
           )}
-
           <SelectedRatePlan
             selectedRate={utilityData.selectedRate}
             firstYearCost={utilityData.yearlyCosts[0]}
+            isLoading={utilityData.loading}
           />
-
-          <CostProjection yearlyCosts={utilityData.yearlyCosts} />
+          <CostProjection
+            yearlyCosts={utilityData.yearlyCosts}
+            isLoading={utilityData.loading}
+          />
         </CardContent>
       </Card>
-
       <FeedbackSnackbar
         open={snackbar.open}
         message={snackbar.message}
