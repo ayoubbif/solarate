@@ -13,7 +13,6 @@ export const useUtilityRates = () => {
 
   const fetchUtilityRates = async (formData) => {
     setUtilityData((prev) => ({ ...prev, loading: true, error: null }));
-
     try {
       const response = await fetch('/api/utility-rates/', {
         method: 'POST',
@@ -31,15 +30,28 @@ export const useUtilityRates = () => {
       }
 
       const data = await response.json();
+
+      // Preserve the currently selected rate if it exists in the new rates
+      const currentSelected = utilityData.selectedRate;
+      const newRates = data.rates || [];
+      let newSelectedRate = data.most_likely_rate;
+
+      if (currentSelected) {
+        // Check if the current selection exists in the new rates
+        const rateStillExists = newRates.find(rate => rate.label === currentSelected.label);
+        if (rateStillExists) {
+          newSelectedRate = rateStillExists;
+        }
+      }
+
       setUtilityData({
-        rates: data.rates || [],
+        rates: newRates,
         mostLikelyRate: data.most_likely_rate,
-        selectedRate: data.selected_rate,
+        selectedRate: newSelectedRate,
         yearlyCosts: data.yearly_costs || [],
         loading: false,
         error: null
       });
-
       return { success: true };
     } catch (error) {
       setUtilityData((prev) => ({
@@ -51,5 +63,16 @@ export const useUtilityRates = () => {
     }
   };
 
-  return { utilityData, fetchUtilityRates };
+  const updateSelectedRate = (rateLabel) => {
+    setUtilityData((prev) => {
+      const selectedRate = prev.rates.find(rate => rate.label === rateLabel);
+      if (!selectedRate) return prev;
+      return {
+        ...prev,
+        selectedRate: selectedRate
+      };
+    });
+  };
+
+  return { utilityData, fetchUtilityRates, updateSelectedRate };
 };
